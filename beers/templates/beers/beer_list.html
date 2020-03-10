@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block title %}
+	All The Beers
+{% endblock %}
+
+{% block content %}
+	<div class="container mt-1">
+
+		<ul class="list-group">
+			{% for beer in object_list %}
+    		<li class="list-group-item d-flex justify-content-between align-items-center mb-1">
+        	<a href="{% url 'beer:BeerDetail' pk=beer.id %}">
+        		{{ beer }}
+        	</a>
+        	<span class="badge badge-primary badge-pill">Brewed by: {{ beer.brewery }}</span>
+    		</li>
+    	{% endfor %}
+		</ul>
+	</div>
+{% endblock %}

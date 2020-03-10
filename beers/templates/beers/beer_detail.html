@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block title %}
+	{{ object.title }} - {{ block.super }}
+{% endblock %}
+
+{% block content %}
+	<h1>
+  	{{ object }}
+	</h1>
+	<p class="h6">
+    Brewed by: <a href="#">{{ object.brewery }}</a>
+	</p>
+	<p class="h6">
+    Style: {{ object.style }}
+	</p>
+  <ul class="list-group list-group-horizontal">
+    <li class="list-group-item"><span class="badge badge-success">OG — {{ object.og }}%</span></li>
+    <li class="list-group-item"><span class="badge badge-success">ABV — {{ object.abv }}%</span></li>
+    <li class="list-group-item"><span class="badge badge-success">IBU — {{object.ibu}}</span></li>
+  </ul>
+	<h3>
+    Used hops:
+	</h3>
+  <ul class="list-group list-group-horizontal">
+  	{% for hop in object.hops.all %}
+    	<li class="list-group-item">{{ hop }}</li>
+    {% empty %}
+    	<li class="list-group-item">Hops are unknown.</li>
+    {% endfor %}
+  </ul>
+{% endblock %}
