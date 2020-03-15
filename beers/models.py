@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 # Create your models here.
 class Beer(models.Model):
@@ -8,6 +9,13 @@ class Beer(models.Model):
     og = models.FloatField(null=True, blank=True)
     abv = models.FloatField(null=True, blank=True)
     ibu = models.FloatField(null=True, blank=True)
+
+    image = models.ImageField(upload_to='images/', null=True)
+    icon = models.ImageField(upload_to='images/', null=True)
+
+    votes_total = models.IntegerField(default=1)
+
+    hunter = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
 
     hops = models.ManyToManyField(to='Hop', related_name='used_hops', blank=True)
 

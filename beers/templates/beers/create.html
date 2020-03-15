@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    {% if 'error' %}
+    {{ error }}
+    <br>
+    <br>
+    {% endif %}
+
+    <h1>Create</h1>
+
+    <form method="POST" action="{% url 'beer:Create' %}" enctype="multipart/form-data">
+        {% csrf_token %}
+        Title*:
+        <br>
+        <input type="text" name="title" placeholder="Enter the beer title">
+        <br>
+        Description:
+        <br>
+        <input type="textbox" name="description">
+        <br>
+        OG*:
+        <br>
+        <input type="number" name="og">
+        <br>
+        ABV*:
+        <br>
+        <input type="number" name="abv">
+        <br>
+        IBU:
+        <br>
+        <input type="number" name="ibu">
+        <br>
+        Icon:
+        <br>
+        <input type="file" name="icon">
+        <br>
+        Image:
+        <br>
+        <input type="file" name="image">
+        <br>
+        <br>
+        <input class="btn btn-primary" type="submit" value="Add Beer">
+    </form>
+{% endblock %}

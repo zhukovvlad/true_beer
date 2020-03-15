@@ -34,9 +34,9 @@
             </ul>
             <ul class="navbar-nav ml-auto">
               {% if user.is_authenticated %}
-                <li class="nav-item nav-link">{{ user }}</li>
-                <li class="nav-item"><a class="nav-link" href="#"><span class="oi oi-plus"></span></a></li>
-                <li class="nav-item"><a class="nav-link" href="javaScript: {document.getElementById('logout').submit()}"><span class="oi oi-account-logout"></span></a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'dashboard' %}">{{ user }}</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'beer:Create' %}"><span class="oi oi-plus"></span></a></li>
+                <li class="nav-item"><a class="nav-link" href="javaScript: {document.getElementById('logout').submit()}">Logout</a></li>
                 <form id="logout" method="POST" action="{% url 'logout' %}">
                   {% csrf_token %}
                   <input type="hidden">
