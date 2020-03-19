@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from breweries.models import Brewery
 
 # Create your models here.
 class Beer(models.Model):
@@ -11,7 +12,7 @@ class Beer(models.Model):
     ibu = models.FloatField(null=True, blank=True)
 
     image = models.ImageField(upload_to='images/', null=True)
-    icon = models.ImageField(upload_to='images/', null=True)
+    icon = models.ImageField(upload_to='images/', default='images/default/default_beer.png')
 
     votes_total = models.IntegerField(default=1)
 
@@ -19,7 +20,7 @@ class Beer(models.Model):
 
     hops = models.ManyToManyField(to='Hop', related_name='used_hops', blank=True)
 
-    brewery = models.ForeignKey(to='Brewery', on_delete=models.SET_NULL, related_name='brewered', null=True, blank=True)
+    brewery = models.ForeignKey(Brewery, on_delete=models.SET_NULL, related_name='brewered', null=True, blank=True)
     style = models.ForeignKey(to='Style', on_delete=models.SET_NULL, null=True, blank=True)
 
     class Meta:
@@ -36,16 +37,6 @@ class Style(models.Model):
 
     def __str__(self):
         return '{}'.format(self.short_title)
-
-
-class Brewery(models.Model):
-    name = models.CharField(max_length=140, verbose_name='Brewery\'s name')
-
-    class Meta:
-        ordering = ('name', )
-
-    def __str__(self):
-        return '{}'.format(self.name)
 
 
 class Hop(models.Model):

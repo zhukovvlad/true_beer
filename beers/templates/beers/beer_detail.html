@@ -5,6 +5,11 @@
 {% endblock %}
 
 {% block content %}
+	<div class="row">
+		<div class="col-2">
+			<img src="{{ object.icon.url }}" class="img-fluid" alt="{{ object.title }}">
+		</div>
+	</div>
 	<h1>
   	{{ object }}
 	</h1>
