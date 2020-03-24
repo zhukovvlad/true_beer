@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     'beers',
     'accounts',
     'breweries',
+    'hops',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

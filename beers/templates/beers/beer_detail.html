@@ -13,9 +13,15 @@
 	<h1>
   	{{ object }}
 	</h1>
-	<p class="h6">
-    Brewed by: <a href="#">{{ object.brewery }}</a>
-	</p>
+	{% if object.brewery %}
+		<p class="h6">
+    		Brewed by: <a href="{% url 'brewery:BreweryDetail' pk=object.brewery.id %}">{{ object.brewery }}</a>
+		</p>
+	{% else %}
+		<p class="h6">
+    		Brewed by: Unknown master</a>
+		</p>
+	{% endif %}
 	<p class="h6">
     Style: {{ object.style }}
 	</p>
@@ -29,7 +35,7 @@
 	</h3>
   <ul class="list-group list-group-horizontal">
   	{% for hop in object.hops.all %}
-    	<li class="list-group-item">{{ hop }}</li>
+    	<li class="list-group-item"><a href="{% url 'hop:HopDetail' pk=hop.id %}">{{ hop }}</li>
     {% empty %}
     	<li class="list-group-item">Hops are unknown.</li>
     {% endfor %}

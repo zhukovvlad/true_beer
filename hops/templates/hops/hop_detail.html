@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block title %}
+	{{ object.name }}
+{% endblock %}
+
+{% block content %}
+	<h1>
+  	{{ object }}
+	</h1>
+	{% if object.description %}
+		<p>
+    	{{ object.description }}
+		</p>
+	{% else %}
+		<p>
+      no description yet.
+		</p>
+	{% endif %}
+	{% if object.alpha_min and object.alpha_max %}
+    <ul class="list-group list-group-horizontal">
+      <li class="list-group-item"><span class="badge badge-success">Alpha min — {{ object.alpha_min }}%</span></li>
+      <li class="list-group-item"><span class="badge badge-success">Alpha_max — {{ object.alpha_max }}%</span></li>
+    </ul>
+	{% endif %}
+	{% if object.profile.all %}
+		<h3>
+    	Aroma Profile:
+		</h3>
+		<ul class="list-group list-group-horizontal">
+  	{% for profile in object.profile.all %}
+    	<li class="list-group-item">
+        {{ profile }}
+    	</li>
+    {% empty %}
+
+    {% endfor %}
+  	</ul>
+		<br>
+	{% endif %}
+	<h3>
+    Brewered beers:
+	</h3>
+  <ul class="list-group list-group-horizontal">
+  	{% for beer in object.used_hops.all %}
+    	<li class="list-group-item">
+        <a href="{% url 'beer:BeerDetail' pk=beer.id %}">{{ beer }}</a>
+    	</li>
+    {% empty %}
+    	<li class="list-group-item">Beers are unknown.</li>
+    {% endfor %}
+  </ul>
+{% endblock %}

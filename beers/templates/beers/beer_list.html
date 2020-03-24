@@ -5,19 +5,24 @@
 {% endblock %}
 
 {% block content %}
-	<div class="container mt-1">
-
-		<ul class="list-group">
+		<div class="row">
+			<ul class="list-group col">
 			{% for beer in object_list %}
-    		<li class="list-group-item d-flex justify-content-between align-items-center mb-1">
-			<img src="{{ beer.icon.url }}" class="col-1" alt="{{ beer }}">
-        	<a href="{% url 'beer:BeerDetail' pk=beer.id %}">
-        		{{ beer }}
-        	</a>
-        	<span class="badge badge-primary badge-pill">Brewed by: {{ beer.brewery }}</span>
-			<span class="badge badge-primary badge-pill">Added by: {{ beer.hunter }}</span>
-    		</li>
-    	{% endfor %}
-		</ul>
-	</div>
+				<li class="col-8 list-group-item list-group-item-action d-flex justify-content-between align-items-center mb-1">
+					<div style="max-width: 70px">
+						<img src="{{ beer.icon.url }}" class="img-fluid" alt="{{ beer }}">
+					</div>
+					<div class="flex-column">
+						<a href="{% url 'beer:BeerDetail' pk=beer.id %}">
+							<h3>
+								{{ beer }}
+							</h3>
+						</a>
+							<span class="badge badge-primary badge-pill">Brewed by: {{ beer.brewery }}</span>
+							<span class="badge badge-primary badge-pill">Added by: {{ beer.hunter }}</span>
+					</div>
+				</li>
+    		{% endfor %}
+			</ul>
+		</div>
 {% endblock %}

@@ -19,6 +19,7 @@ def create(request):
     if request.method == 'POST':
         if request.POST['title'] and request.POST['og'] and request.POST['abv']:
             beer = Beer()
+            print(request.POST)
             beer.title = request.POST['title']
             beer.description = request.POST['description']
             beer.og = request.POST['og']

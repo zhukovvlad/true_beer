@@ -32,6 +32,7 @@
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item"><a class="nav-link" href="{% url 'beer:BeerList' %}">Beers</a></li>
                 <li class="nav-item"><a class="nav-link" href="{% url 'brewery:BreweryList' %}">Breweries</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'hop:HopList' %}">Hops</a></li>
             </ul>
             <ul class="navbar-nav ml-auto">
               {% if user.is_authenticated %}

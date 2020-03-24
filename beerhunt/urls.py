@@ -21,6 +21,7 @@ from django.conf.urls.static import static
 import beers.urls
 import accounts.urls
 import breweries.urls
+import hops.urls
 
 from beers import views
 
@@ -29,5 +30,6 @@ urlpatterns = [
     path('', views.home, name='home'),
     path('beers/', include(beers.urls, namespace="beer")),
     path('breweries/', include(breweries.urls, namespace="brewery")),
+    path('hops/', include(hops.urls, namespace="hop")),
     path('accounts/', include('accounts.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
