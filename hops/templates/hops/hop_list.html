@@ -13,6 +13,7 @@
                 <a href="{% url 'hop:HopDetail' pk=hop.id %}">
                     {{ hop }}
                 </a>
+                {{ hop.beer_amount }}
     		</li>
     	{% endfor %}
 		</ul>

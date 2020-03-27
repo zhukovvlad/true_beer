@@ -24,6 +24,9 @@ class Beer(models.Model):
     brewery = models.ForeignKey(Brewery, on_delete=models.SET_NULL, related_name='brewered', null=True, blank=True)
     style = models.ForeignKey(to='Style', on_delete=models.SET_NULL, null=True, blank=True)
 
+    def amount_hops(self):
+        return len(self.hops.all())
+    
     class Meta:
         ordering = ('title', )
 

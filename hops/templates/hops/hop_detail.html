@@ -23,12 +23,12 @@
       <li class="list-group-item"><span class="badge badge-success">Alpha_max — {{ object.alpha_max }}%</span></li>
     </ul>
 	{% endif %}
-	{% if object.profile.all %}
+	{% if object.aroma_profile %}
 		<h3>
     	Aroma Profile:
 		</h3>
 		<ul class="list-group list-group-horizontal">
-  	{% for profile in object.profile.all %}
+  	{% for profile in object.aroma_profile.all %}
     	<li class="list-group-item">
         {{ profile }}
     	</li>

@@ -4,6 +4,9 @@ from django.db import models
 class AromaProfile(models.Model):
     title = models.CharField(max_length=100)
 
+    class Meta:
+        ordering = ('title', )
+
     def __str__(self):
         return '{}'.format(self.title)
     
@@ -23,6 +26,9 @@ class Hop(models.Model):
     aroma_profile = models.ManyToManyField(to='AromaProfile', related_name='aroma_profile', blank=True)
 
     objects = HopManager()
+
+    def beer_amount(self):
+        return len(self.used_hops.all())
 
     class Meta:
         ordering = ('name', )
