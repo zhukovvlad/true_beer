@@ -13,6 +13,9 @@
 	<h1>
   	{{ object }}
 	</h1>
+	<h3>
+		Hunted by: {{ object.hunter }}
+	</h3>
 	{% if object.brewery %}
 		<p class="h6">
     		Brewed by: <a href="{% url 'brewery:BreweryDetail' pk=object.brewery.id %}">{{ object.brewery }}</a>

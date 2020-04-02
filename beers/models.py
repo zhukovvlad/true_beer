@@ -1,11 +1,12 @@
 from django.db import models
+from django.shortcuts import reverse
 from django.contrib.auth.models import User
 from breweries.models import Brewery
 from hops.models import Hop
 
 # Create your models here.
 class Beer(models.Model):
-    title = models.CharField(max_length=140)
+    title = models.CharField(max_length=140, db_index=True)
     description = models.TextField(null=True, blank=True)
 
     og = models.FloatField(null=True, blank=True)
@@ -21,11 +22,15 @@ class Beer(models.Model):
 
     hops = models.ManyToManyField(Hop, related_name='used_hops', blank=True)
 
-    brewery = models.ForeignKey(Brewery, on_delete=models.SET_NULL, related_name='brewered', null=True, blank=True)
+    brewery = models.ForeignKey(Brewery, on_delete=models.CASCADE, related_name='brewered', null=True)
     style = models.ForeignKey(to='Style', on_delete=models.SET_NULL, null=True, blank=True)
 
     def amount_hops(self):
         return len(self.hops.all())
+    
+    def get_absolute_url(self):
+        return reverse("beer:BeerDetail", kwargs={"pk": self.pk})
+    
     
     class Meta:
         ordering = ('title', )

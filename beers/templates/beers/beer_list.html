@@ -33,11 +33,11 @@
 								<div class="h4"><span class="oi oi-star"></span></div>
 								<div class="h4"><span class="oi oi-star"></span></div>
 							</div>
-							<div class="mt-1">Hops:
+							<div class="mt-1">Hops: 
 							{% if beer.amount_hops > 0 %}
-								<ul class="row list-unstyled">
+								<ul class="custom-hops-range">
 								{% for hop in beer.hops.all %}
-									<li class="list-item"><span class="font-weight-bold"> {{ hop }} </span></li>
+										<li>{{ hop }}</li>
 								{% endfor %}
 								</ul>
 							{% else %}
@@ -48,5 +48,40 @@
 					</li>
     		{% endfor %}
 			</ul>
+			{% if is_paginated %}
+				<nav>
+					<ul class="pagination">
+						<li class="page-item">
+							<a href="{% url 'beer:BeerList' %}?page=1" class="page-link">
+								First
+							</a>
+						</li>
+						{% if page_obj.has_previous %}
+							<li class="page-item">
+								<a href="{% url 'beer:BeerList' %}?page={{ page_obj.previous_page_number }}" class="page-link">
+									{{ page_obj.previous_page_number }}
+								</a>
+							</li>
+						{% endif %}
+						<li class="page-item active">
+							<a href="{% url 'beer:BeerList' %}?page={{ page_obj.number }}" class="page-link">
+								{{ page_obj.number }}
+							</a>
+						</li>
+						{% if page_obj.has_next %}
+							<li class="page-item">
+								<a href="{% url 'beer:BeerList' %}?page={{ page_obj.next_page_number }}" class="page-link">
+									{{ page_obj.next_page_number }}
+								</a>
+							</li>
+						{% endif %}
+						<li class="page-item">
+							<a href="{% url 'beer:BeerList' %}?page=last" class="page-link">
+								Last
+							</a>
+						</li>
+					</ul>
+				</nav>
+			{% endif %}
 
 {% endblock %}
