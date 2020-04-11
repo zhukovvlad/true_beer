@@ -9,38 +9,61 @@
 		<div class="col-2">
 			<img src="{{ object.icon.url }}" class="img-fluid" alt="{{ object.title }}">
 		</div>
+		<div class="col-10">
+			<h1>
+				{{ object }}
+			</h1>
+		</div>
 	</div>
-	<h1>
-  	{{ object }}
-	</h1>
-	<h3>
-		Hunted by: {{ object.hunter }}
-	</h3>
-	{% if object.brewery %}
-		<p class="h6">
-    		Brewed by: <a href="{% url 'brewery:BreweryDetail' pk=object.brewery.id %}">{{ object.brewery }}</a>
-		</p>
-	{% else %}
-		<p class="h6">
-    		Brewed by: Unknown master</a>
-		</p>
-	{% endif %}
-	<p class="h6">
-    Style: {{ object.style }}
-	</p>
-    <ul class="list-group list-group-horizontal">
-        <li class="list-group-item"><span class="badge badge-success">OG — {{ object.og }}%</span></li>
-        <li class="list-group-item"><span class="badge badge-success">ABV — {{ object.abv }}%</span></li>
-        <li class="list-group-item"><span class="badge badge-success">IBU — {{object.ibu}}</span></li>
-    </ul>
-	<h3>
-    Used hops:
-	</h3>
-  <ul class="list-group list-group-horizontal">
-  	{% for hop in object.hops.all %}
-    	<li class="list-group-item"><a href="{% url 'hop:HopDetail' pk=hop.id %}">{{ hop }}</li>
-    {% empty %}
-    	<li class="list-group-item">Hops are unknown.</li>
-    {% endfor %}
+	<div class="row">
+		<div class="col-8">
+			<h3>
+				Hunted by: {{ object.hunter }}
+			</h3>
+			{% if object.brewery %}
+				<p class="h6">
+					Brewed by: <a href="{% url 'brewery:BreweryDetail' pk=object.brewery.id %}">{{ object.brewery }}</a>
+				</p>
+			{% else %}
+				<p class="h6">
+					Brewed by: Unknown master</a>
+				</p>
+			{% endif %}
+			<p class="h6">
+			Style: {{ object.style }}
+			</p>
+			<ul class="list-group list-group-horizontal">
+				<li class="list-group-item"><span class="badge badge-success">OG — {{ object.og }}%</span></li>
+				<li class="list-group-item"><span class="badge badge-success">ABV — {{ object.abv }}%</span></li>
+				<li class="list-group-item"><span class="badge badge-success">IBU — {{object.ibu}}</span></li>
+			</ul>
+			<h3>
+			Used hops:
+			</h3>
+		  <ul class="list-group list-group-horizontal">
+			  {% for hop in object.hops.all %}
+				<li class="list-group-item"><a href="{% url 'hop:HopDetail' pk=hop.id %}">{{ hop }}</a></li>
+			{% empty %}
+				<li class="list-group-item">Hops are unknown.</li>
+			{% endfor %}
+		  </ul>
+		</div>
+		<div class="col-4">
+			<div>
+				<h2>
+					Score: {{ object.score|default_if_none:"TBD" }}
+				</h2>
+			</div>
+			{% if vote_form %}
+				<form method="post" action="{{ vote_form_url }}">
+					{% csrf_token %}
+					{{ vote_form.as_p }}
+					<button class="btn btn-primary">Vote</button>
+				</form>
+			{% else %}
+				<p>LogIn to vote for this beer</p>
+			{% endif %}
+		</div>
+	</div>
   </ul>
 {% endblock %}

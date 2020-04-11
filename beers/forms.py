@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth import get_user_model
 
-from .models import Beer
+from .models import Beer, Vote
 
 class BeerCreateForm(forms.ModelForm):
     hunter = forms.ModelChoiceField(
@@ -24,3 +24,29 @@ class BeerCreateForm(forms.ModelForm):
             'brewery': forms.Select(attrs={'class': 'form-control'}),
             'style': forms.Select(attrs={'class': 'form-control'}),
         }
+
+class VoteForm(forms.ModelForm):
+
+    user = forms.ModelChoiceField(
+        widget=forms.HiddenInput,
+        queryset=get_user_model().objects.all(),
+        disabled=True,
+    )
+
+    beer = forms.ModelChoiceField(
+        widget=forms.HiddenInput,
+        queryset=Beer.objects.all(),
+        disabled=True,
+    )
+
+    value = forms.ChoiceField(
+        label='Vote',
+        widget=forms.RadioSelect,
+        choices=Vote.VALUE_CHOICES,
+    )
+
+    class Meta:
+        model = Vote
+        fields = (
+            'value', 'user', 'beer',
+        )
