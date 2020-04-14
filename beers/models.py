@@ -30,13 +30,14 @@ class BeerManager(models.Manager):
 
 class Beer(models.Model):
     title = models.CharField(max_length=140, db_index=True)
+    version = models.CharField(max_length=140, null=True, blank=True, db_index=True)
     description = models.TextField(null=True, blank=True)
 
     og = models.FloatField(null=True, blank=True)
     abv = models.FloatField(null=True, blank=True)
     ibu = models.FloatField(null=True, blank=True)
 
-    image = models.ImageField(upload_to='images/', null=True, blank=True)
+    image = models.ImageField(upload_to='images/', default='images/default/default_beer.png', null=True, blank=True)
     icon = models.ImageField(upload_to='images/', default='images/default/default_beer.png', null=True)
 
     votes_total = models.IntegerField(default=1)

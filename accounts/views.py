@@ -2,6 +2,10 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
+from django.db.models import Count
+from django.db.models.aggregates import Sum
+
+from beers.models import Beer
 
 # Create your views here.
 def signup(request):
@@ -39,4 +43,12 @@ def logout(request):
 
 @login_required
 def dashboard(request):
-    return render(request, 'accounts/dashboard.html')
+    user_beers = Beer.objects.all_with_related_instances_and_score()
+    user_beers = user_beers.filter(hunter=request.user.id)
+    total_count = user_beers.count()
+    total_score = 0
+    for beer in user_beers:
+        if beer.score:
+            total_score += beer.score
+    context = {'user_beers': user_beers, 'total_score': total_score, 'total_count': total_count}
+    return render(request, 'accounts/dashboard.html', context)

@@ -12,10 +12,11 @@ class BeerCreateForm(forms.ModelForm):
 
     class Meta:
         model = Beer
-        fields = ['title', 'description', 'og', 'abv', 'ibu', 'hops', 'brewery', 'style', 'hunter']
+        fields = ['title', 'version', 'description', 'og', 'abv', 'ibu', 'hops', 'brewery', 'style', 'hunter']
 
         widgets = {
             'title': forms.TextInput(attrs={'class': 'form-control'}),
+            'version': forms.TextInput(attrs={'class': 'form-control'}),
             'description': forms.Textarea(attrs={'class': 'form-control'}),
             'og': forms.NumberInput(attrs={'class': 'form-control'}),
             'abv': forms.NumberInput(attrs={'class': 'form-control'}),

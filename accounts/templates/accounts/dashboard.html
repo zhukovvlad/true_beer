@@ -3,4 +3,14 @@
 {% block content %}
     <h1>Dashboard</h1>
     <p>Welcome {{ user }}.</p>
+    {% if total_count <= 0 %}
+        <h3>You added no beer yet. Just do it!</h3>
+    {% else %}
+        <h3>You added {{ total_count }} beers with total score {{ total_score }}.</h3>
+    {% endif %}
+    <ul>
+        {% for beer in user_beers %}
+            <li>{{ beer }} - {{ beer.score }}</li>
+        {% endfor %}
+    </ul>
 {% endblock %}

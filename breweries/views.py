@@ -8,5 +8,7 @@ from .models import Brewery
 class BreweryList(ListView):
     model = Brewery
 
+    context_object_name = "brewery_list"
+
 class BreweryDetail(DetailView):
     model = Brewery
