@@ -27,6 +27,14 @@ class BeerManager(models.Manager):
         qs = qs.annotate(score=Sum('vote__value'))
         return qs
 
+    def top_beers(self, limit=10):
+        qs = self.get_queryset()
+        qs = qs.annotate(vote_sum=Sum('vote__value'))
+        qs = qs.exclude(vote_sum=None)
+        qs = qs.order_by('-vote_sum')
+        qs = qs[:limit]
+        return qs
+
 
 class Beer(models.Model):
     title = models.CharField(max_length=140, db_index=True)
@@ -49,10 +57,9 @@ class Beer(models.Model):
     brewery = models.ForeignKey(Brewery, on_delete=models.CASCADE, related_name='brewered', null=True)
     style = models.ForeignKey(to='Style', on_delete=models.SET_NULL, null=True, blank=True)
 
-    objects = BeerManager()
+    date_pub = models.DateTimeField(auto_now_add=True)
 
-    def amount_hops(self):
-        return len(self.hops.all())
+    objects = BeerManager()
     
     def get_absolute_url(self):
         return reverse("beer:BeerDetail", kwargs={"pk": self.pk})

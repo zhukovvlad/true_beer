@@ -42,7 +42,7 @@
 								Total score: {{ beer.score|default_if_none:"No votes yet" }}
 							</div>
 							<div class="mt-1">Hops: 
-							{% if beer.amount_hops > 0 %}
+							{% if beer.hops.count > 0 %}
 								<ul class="custom-hops-range">
 								{% for hop in beer.hops.all %}
 										<li>{{ hop }}</li>

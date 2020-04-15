@@ -16,12 +16,12 @@ class BeerList(ListView):
     paginate_by = 10
     # model = Beer
     queryset = Beer.objects.all_with_related_instances_and_score()
+    # print ('Queryset is ', queryset.values())
 
     context_object_name = 'beer_list'
 
 class BeerDetail(DetailView):
     queryset = Beer.objects.all_with_related_instances_and_score()
-    print('Queryset is ', queryset)
     
     def get_context_data(self, **kwargs):
         print('object is ', self.object)

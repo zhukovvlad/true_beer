@@ -45,10 +45,19 @@ def logout(request):
 def dashboard(request):
     user_beers = Beer.objects.all_with_related_instances_and_score()
     user_beers = user_beers.filter(hunter=request.user.id)
+    user_beers = user_beers.order_by('-score')
     total_count = user_beers.count()
+    top_ten = user_beers.order_by('-score')
+    top_ten = top_ten.exclude(score=None)
+    top_ten = top_ten[:10]
     total_score = 0
     for beer in user_beers:
         if beer.score:
             total_score += beer.score
-    context = {'user_beers': user_beers, 'total_score': total_score, 'total_count': total_count}
+    context = {
+        'user_beers': user_beers,
+        'total_score': total_score,
+        'total_count': total_count,
+        'top_ten': top_ten
+    }
     return render(request, 'accounts/dashboard.html', context)
