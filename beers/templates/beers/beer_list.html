@@ -14,7 +14,7 @@
 						</div>
 						<div class="col-4">
 							{% if beer.version %}
-								<a href="{% url 'beer:BeerDetail' pk=beer.id %}">
+								<a href="{{ beer.get_absolute_url }}">
 									<h4 class="mb-1">
 										{{ beer|upper }}
 									</h4>
@@ -23,7 +23,7 @@
 									</p>
 								</a>
 							{% else %}
-								<a href="{% url 'beer:BeerDetail' pk=beer.id %}">
+								<a href="{{ beer.get_absolute_url }}">
 									<h4>
 										{{ beer|upper }}
 									</h4>

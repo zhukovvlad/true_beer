@@ -1,13 +1,22 @@
 from django.db import models
 from django.shortcuts import reverse
+from django.core.exceptions import ValidationError
 import django.contrib.auth
 from django.contrib.auth.models import User
 from breweries.models import Brewery
 from hops.models import Hop
 
+from .validators import validate_title
+
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models.aggregates import Sum
+from django.utils.text import slugify
+
+
+def gen_slug(s):
+    new_slug = slugify(s, allow_unicode=True)
+    return new_slug
 
 # Create your models here.
 class BeerManager(models.Manager):
@@ -37,7 +46,7 @@ class BeerManager(models.Manager):
 
 
 class Beer(models.Model):
-    title = models.CharField(max_length=140, db_index=True)
+    title = models.CharField(max_length=140, db_index=True, validators=[validate_title])
     version = models.CharField(max_length=140, null=True, blank=True, db_index=True)
     description = models.TextField(null=True, blank=True)
 
@@ -58,18 +67,38 @@ class Beer(models.Model):
     style = models.ForeignKey(to='Style', on_delete=models.SET_NULL, null=True, blank=True)
 
     date_pub = models.DateTimeField(auto_now_add=True)
+    slug = models.SlugField(blank=True)
 
     objects = BeerManager()
     
     def get_absolute_url(self):
-        return reverse("beer:BeerDetail", kwargs={"pk": self.pk})
+        return reverse("beer:BeerDetail", kwargs={"slug": self.slug})
     
+    def title_for_render(self):
+        title_list = self.title.split(' ')
+        title_list = (x.capitalize() for x in title_list)
+        title_list = list(title_list)
+        title_list = ' '.join(str(x) for x in title_list)
+        return title_list
     
     class Meta:
         ordering = ('title', )
+        constraints = [
+            models.UniqueConstraint(fields=['title', 'version', 'brewery'], name='beer_constraint')
+        ]
 
     def __str__(self):
         return '{}'.format(self.title)
+    
+    def save(self, *args, **kwargs):
+        self.title = self.title.lower()
+        if not self.id:
+            if self.version:
+                new_slug = self.title + ' ' + self.version + ' by ' + str(self.brewery.name)
+            else:
+                new_slug = self.title + ' by ' + self.brewery.name
+            self.slug = gen_slug(new_slug)
+        super().save(*args, **kwargs)
 
 
 class Style(models.Model):

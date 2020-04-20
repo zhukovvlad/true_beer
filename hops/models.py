@@ -11,7 +11,7 @@ class AromaProfile(models.Model):
         return '{}'.format(self.title)
     
 
-class HopManager(models.Model):
+class HopManager(models.Manager):
     def all_with_prefetch_beers(self):
         qs = self.get_queryset()
         return qs.prefetch_related('used_hops')

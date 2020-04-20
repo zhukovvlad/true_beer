@@ -13,7 +13,7 @@
                 <a href="{% url 'brewery:BreweryDetail' slug=brewery.slug %}">
                     {{ brewery }}
                 </a>
-				{{ brewery.beer_amount }}
+				{{ brewery.brewered.count }}
     		</li>
     	{% endfor %}
 		</ul>

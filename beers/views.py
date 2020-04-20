@@ -1,3 +1,5 @@
+# from git
+
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.core.exceptions import PermissionDenied
@@ -64,17 +66,18 @@ class CreateVote(LoginRequiredMixin, CreateView):
     def get_initial(self):
         initial = super().get_initial()
         print('start initial is ', initial)
+        print('KWARGS are ', self.kwargs)
         initial['user'] = self.request.user.id
         initial['beer'] = self.kwargs['beer_id']
         print('final initial is ', initial)
         return initial
     
     def get_success_url(self):
-        beer_id = self.object.beer.id
+        beer_slug = self.object.beer.slug
         return reverse(
             'beer:BeerDetail',
             kwargs={
-                'pk': beer_id})
+                'slug': beer_slug})
 
     def render_to_response(self, context, **response_kwargs):
         print(context)
@@ -100,10 +103,10 @@ class UpdateVote(LoginRequiredMixin, UpdateView):
         return vote
     
     def get_success_url(self):
-        beer_id = self.object.beer.id
+        beer_slug = self.object.beer.slug
         return reverse(
             'beer:BeerDetail',
-            kwargs={'pk': beer_id})
+            kwargs={'slug': beer_slug})
 
     def render_to_response(self, context, **response_kwargs):
         beer_id = context['object'].id
@@ -113,43 +116,6 @@ class UpdateVote(LoginRequiredMixin, UpdateView):
         return redirect(
             to=beer_detail_url)
 
-""" @login_required
-def create(request):
-    if request.method == 'POST':
-        if request.POST['title'] and request.POST['og'] and request.POST['abv']:
-            beer = Beer()
-            print(request.POST)
-            beer.title = request.POST['title']
-            beer.description = request.POST['description']
-            beer.og = request.POST['og']
-            beer.abv = request.POST['abv']
-            beer.ibu = request.POST['ibu']
-            beer.icon = request.FILES['icon']
-            beer.image = request.FILES['image']
-            beer.hunter = request.user
-            beer.save()
-            return redirect('beer:BeerList')
-        else:
-            return render(request, 'beers/create.html', {'error': 'All fields with * are required'})
-    else:
-        return render(request, 'beers/create.html') """
-
-""" class BeerCreate(LoginRequiredMixin, CreateView):
-    def get(self, request):
-        form = BeerCreateForm()
-        return render(request, 'beers/create.html', context={'form': form})
-    def post(self, request):
-        print(request.POST)
-        bound_form = BeerCreateForm(request.POST)
-        print()
-        if bound_form.is_valid():
-            new_beer = bound_form.save()
-            new_beer.hunter = self.request.user
-            print(new_beer)
-            return redirect(new_beer)
-        return render(request, 'beers/create.html', context={'form': bound_form})
-    
-    #   raise_exception = True """
 
 class BeerCreate(LoginRequiredMixin, CreateView):
     form_class = BeerCreateForm
@@ -159,3 +125,9 @@ class BeerCreate(LoginRequiredMixin, CreateView):
         return {
             'hunter': self.request.user.id
         }
+
+class BeerUpdate(LoginRequiredMixin, UpdateView):
+    queryset = Beer.objects.all()
+    form_class = BeerCreateForm
+    template_name = 'beers/update_view.html'
+    print(object)

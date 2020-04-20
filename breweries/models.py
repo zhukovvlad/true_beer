@@ -10,7 +10,7 @@ def gen_slug(s):
     return new_slug + '-brewery'
 
 # Create your models here.
-class BreweryManager(models.Model):
+class BreweryManager(models.Manager):
     def all_with_prefetch_beers(self):
         qs = self.get_queryset()
         return qs.prefetch_related('brewered')
@@ -26,9 +26,6 @@ class Brewery(models.Model):
     class Meta:
         ordering = ('name', )
         verbose_name_plural = 'Breweries'
-
-    def beer_amount(self):
-        return self.brewered.count()
 
     def save(self, *args, **kwargs):
         if not self.id:

@@ -10,7 +10,7 @@
     {% endif %}
     <ul>
         {% for beer in user_beers %}
-            <li>{{ beer }} - {{ beer.score }}</li>
+            <li>{{ beer.title_for_render }} - {{ beer.score }}</li>
         {% endfor %}
     </ul>
     <h3>

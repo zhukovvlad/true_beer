@@ -13,7 +13,7 @@
                 <a href="{% url 'hop:HopDetail' pk=hop.id %}">
                     {{ hop }}
                 </a>
-                {{ hop.beer_amount }}
+                {{ hop.used_hops.count }}
     		</li>
     	{% endfor %}
 		</ul>

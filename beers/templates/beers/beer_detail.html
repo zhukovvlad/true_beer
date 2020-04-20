@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block title %}
-	{{ object.title }} - {{ block.super }}
+	{{ object.title_for_render }} - {{ block.super }}
 {% endblock %}
 
 {% block content %}
@@ -11,7 +11,7 @@
 		</div>
 		<div class="col-6">
 			<h1>
-				{{ object }}
+				{{ object.title_for_render }}
 			</h1>
 			<h6>
 				Hunted by: {{ object.hunter }}
