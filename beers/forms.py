@@ -26,7 +26,7 @@ class BeerCreateForm(forms.ModelForm):
             'brewery': forms.Select(attrs={'class': 'form-control'}),
             'style': forms.Select(attrs={'class': 'form-control'}),
         }
-
+'''
     def clean_title(self):
         new_title = self.cleaned_data.get('title')
         if new_title == 'fuck':
@@ -53,7 +53,7 @@ class BeerCreateForm(forms.ModelForm):
 
         if qs.count() > 0:
             raise forms.ValidationError("We can not help you")
-        return cleaned_data        
+        return cleaned_data        '''
 
 
 class VoteForm(forms.ModelForm):

@@ -4,7 +4,7 @@
 {% block content %}
     <h1>Create Beer</h1>
 
-    <form class="" action="{% url 'beer:Create' %}" method="post">
+    <form class="" method="post">
         <div class="form-group">
             {% csrf_token %}
             {{ form|crispy }}

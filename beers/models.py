@@ -67,7 +67,7 @@ class Beer(models.Model):
     style = models.ForeignKey(to='Style', on_delete=models.SET_NULL, null=True, blank=True)
 
     date_pub = models.DateTimeField(auto_now_add=True)
-    slug = models.SlugField(blank=True)
+    slug = models.SlugField(blank=True, editable=False, auto_created=True)
 
     objects = BeerManager()
     
