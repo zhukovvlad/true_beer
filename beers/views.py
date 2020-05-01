@@ -18,9 +18,16 @@ class BeerList(ListView):
     paginate_by = 10
     # model = Beer
     queryset = Beer.objects.all_with_related_instances_and_score()
-    # print ('Queryset is ', queryset.values())
+    print ('Queryset is ', queryset)
 
     context_object_name = 'beer_list'
+
+    ordering = ['-score']
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        context['total_beer_list'] = Beer.objects.all()
+        return context
 
 class BeerDetail(DetailView):
     queryset = Beer.objects.all_with_related_instances_and_score()
@@ -54,6 +61,7 @@ class BeerDetail(DetailView):
                     })
                 )
             vote_form = VoteForm(instance=vote)
+            ctx['vote'] = vote
             ctx['vote_form'] = vote_form
             ctx['vote_form_url'] = vote_form_url
         print('final context is ', ctx)

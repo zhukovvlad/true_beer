@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block content %}
-			<h1>All the beers</h1>
+			<h1>All the beers {{total_beer_list.count}}</h1>
 			<ul class="list-group col">
 			{% for beer in beer_list %}
 					<li class="custom-list-bg row mt-3 pt-2 pb-2">

@@ -3,16 +3,33 @@
 {% block content %}
     <h1>Dashboard</h1>
     <p>Welcome {{ user }}.</p>
-    {% if total_count <= 0 %}
+    {% if not total_count %}
         <h3>You added no beer yet. Just do it!</h3>
     {% else %}
         <h3>You added {{ total_count }} beers with total score {{ total_score }}.</h3>
     {% endif %}
-    <ul>
+    <div class="row">
         {% for beer in user_beers %}
-            <li>{{ beer.title_for_render }} - {{ beer.score }}</li>
+            <div class="card col-sm-6">
+                <!--<img src="{{beer.image.url}}" class="card-img-top" alt="{{ beer }}">-->
+                <div class="card-body">
+                    {% if beer.version %}
+                        <h5 class="card-title"><a href="{{ beer.get_absolute_url }}">{{ beer.title_for_render }} - {{ beer.version }}</a> <span class="badge badge-secondary">Total score: {{ beer.score }}</span></h5>
+                    {% else %}
+                        <h5 class="card-title"><a href="{{ beer.get_absolute_url }}">{{ beer.title_for_render }}</a> <span class="badge badge-secondary">Total score: {{ beer.score }}</span></h5>
+                    {% endif %}   
+                    {{ beer.brewery }}
+                    <div class="row mb-1">
+                        <div class="col-sm-2">OG: <span class="font-weight-bold">{{ beer.og }}%</span></div>
+                        <div class="col-sm-2">ABV: <span class="font-weight-bold">{{ beer.abv }}%</span></div>
+                        <div class="col-sm-2">IBU: <span class="font-weight-bold">{{ beer.ibu }}</span></div>
+                    </div>
+                        <a href="{% url 'beer:Update' slug=beer.slug %}" class="card-link">Edit</a>
+                        <a href="#" class="card-link">Delete</a>
+                </div>
+            </div>
         {% endfor %}
-    </ul>
+    </div>
     <h3>
     Top 10 beers:
     </h3>

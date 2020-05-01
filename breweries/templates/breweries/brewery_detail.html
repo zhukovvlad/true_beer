@@ -11,7 +11,11 @@
 	<ul class="list-group list-group-horizontal">
   	{% for beer in object.brewered.all %}
     	<li class="list-group-item">
-        <a href="{{ beer.get_absolute_url }}">{{ beer.title_for_render }}</a>
+		{% if beer.version %}
+        <a href="{{ beer.get_absolute_url }}">{{ beer.title_for_render }} {{ beer.version }}</a>
+		{% else %}
+		<a href="{{ beer.get_absolute_url }}">{{ beer.title_for_render }}</a>
+		{% endif %}
     	</li>
     {% empty %}
     	<li class="list-group-item">Beers are unknown.</li>

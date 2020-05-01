@@ -27,9 +27,6 @@ class Hop(models.Model):
 
     objects = HopManager()
 
-    def beer_amount(self):
-        return len(self.used_hops.all())
-
     class Meta:
         ordering = ('name', )
     

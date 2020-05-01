@@ -72,7 +72,7 @@ class VoteForm(forms.ModelForm):
 
     value = forms.ChoiceField(
         label='Vote',
-        widget=forms.RadioSelect,
+        widget=forms.RadioSelect(attrs={'class': 'custom-input'}),
         choices=Vote.VALUE_CHOICES,
     )
 
@@ -81,3 +81,4 @@ class VoteForm(forms.ModelForm):
         fields = (
             'value', 'user', 'beer',
         )
+

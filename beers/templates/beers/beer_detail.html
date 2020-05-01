@@ -44,12 +44,23 @@
 				<h2>
 					Score: {{ object.score|default_if_none:"TBD" }}
 				</h2>
+				Your last vote is: {% if vote.value == 1 %} UP {% elif vote.value == -1 %} DOWN {% else %} None {% endif %}
 			</div>
 			{% if vote_form %}
-				<form method="post" action="{{ vote_form_url }}">
+				<form method="post" action="{{ vote_form_url }}" id="voteForm">
 					{% csrf_token %}
-					{{ vote_form.as_p }}
-					<button class="btn btn-primary">Vote</button>
+					{% for vote in vote_form.value %}
+						<label class="btn btn-block btn-primary" for="{{ vote.id_for_label }}">
+							{{ vote.choice_label }}
+							{{ vote.tag }}
+						</label>
+						<!--<div class="form-check btn btn-primary">
+						{{ vote }}
+						</div>-->
+					{% endfor %}
+					{{ vote_form.beer }}
+					{{ vote_form.user }}
+					<!--<button class="btn btn-primary">Vote</button>-->
 				</form>
 			{% else %}
 				<p>LogIn to vote for this beer</p>

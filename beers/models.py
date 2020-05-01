@@ -146,3 +146,20 @@ class Vote(models.Model):
 
     class Meta:
         unique_together = ('user', 'beer', )
+
+
+class BeerComment(models.Model):
+    beer = models.ForeignKey(Beer, on_delete=models.CASCADE, related_name='comments')
+    author = models,models.ForeignKey(User, on_delete=models.CASCADE)
+    title = models.CharField(max_length=80)
+    body = models.TextField()
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ('created',)
+    
+    def __str__(self):
+        return 'Comment by {} on {}'.format(self.title, self.beer)
+    
+
