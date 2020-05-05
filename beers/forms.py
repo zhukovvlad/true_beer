@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 
-from .models import Beer, Vote
+from .models import Beer, Vote, BeerComment
 
 class BeerCreateForm(forms.ModelForm):
     hunter = forms.ModelChoiceField(
@@ -81,4 +81,29 @@ class VoteForm(forms.ModelForm):
         fields = (
             'value', 'user', 'beer',
         )
+
+
+class BeerCommentForm(forms.ModelForm):
+
+    '''author = forms.ModelChoiceField(
+        widget=forms.HiddenInput,
+        queryset=get_user_model().objects.all(),
+        disabled=True,
+    )
+
+    beer = forms.ModelChoiceField(
+        widget=forms.HiddenInput,
+        queryset=Beer.objects.all(),
+        disabled=True,
+    )'''
+    
+    class Meta:
+        model = BeerComment
+        fields = ('title', 'body', 'author', 'beer',)
+        widgets = {
+            'author': forms.HiddenInput(),
+            'beer': forms.HiddenInput(),
+            'title': forms.TextInput(attrs={'class': 'form-control'}),
+            'body': forms.TextInput(attrs={'class': 'form-control'})
+                    }
 

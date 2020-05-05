@@ -38,6 +38,11 @@
 					{{ object.description }}
 				</p>
 			{% endif %}
+			<!--
+			{% for comment in object.comments.all %}
+				{{ comment.title }}
+				{{ comment.body }}
+			{% endfor %}-->
 		</div>
 		<div class="col-4">
 			<div>
@@ -81,5 +86,21 @@
 		  </ul>
 		</div>
 	</div>
-  </ul>
+	{% for comment in object.comments.all %}
+		<div class="media">
+			<div class="media-body">
+				<h5 class="mt-0">{{ comment.title }}</h5>
+				{{ comment.body }}
+				{{ comment.created }}
+			</div>
+		</div>
+	{% endfor %}
+	{% if beer_comment_form %}
+	Add Comment:
+		<form method="post" action="{% url 'beer:BeerComment' slug=object.slug %}">
+			{% csrf_token %}
+			{{ beer_comment_form.as_p }}
+			<button class="btn btn-primary">Comment</button>
+		</form>
+	{% endif %}
 {% endblock %}

@@ -7,8 +7,8 @@ from django.views.generic import ListView, DetailView, View, CreateView, UpdateV
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 
-from beers.models import Beer, Vote
-from .forms import BeerCreateForm, VoteForm
+from beers.models import Beer, Vote, BeerComment
+from .forms import BeerCreateForm, VoteForm, BeerCommentForm
 
 # Create your views here.
 def home(request):
@@ -18,7 +18,6 @@ class BeerList(ListView):
     paginate_by = 10
     # model = Beer
     queryset = Beer.objects.all_with_related_instances_and_score()
-    print ('Queryset is ', queryset)
 
     context_object_name = 'beer_list'
 
@@ -39,6 +38,11 @@ class BeerDetail(DetailView):
         ctx = super().get_context_data(**kwargs)
         print('initial ctx ', ctx)
         if self.request.user.is_authenticated:
+            beer_comment = BeerComment(
+                beer=self.object,
+                author=self.request.user
+            )
+
             vote = Vote.objects.get_vote_or_unsaved_blank_vote(
                 beer=self.object,
                 user=self.request.user
@@ -61,9 +65,12 @@ class BeerDetail(DetailView):
                     })
                 )
             vote_form = VoteForm(instance=vote)
+            beer_comment_form = BeerCommentForm(instance=beer_comment)
             ctx['vote'] = vote
             ctx['vote_form'] = vote_form
             ctx['vote_form_url'] = vote_form_url
+            ctx['beer_comment_form'] = beer_comment_form
+            ctx['request_object'] = self.object
         print('final context is ', ctx)
         return ctx
 
@@ -88,7 +95,7 @@ class CreateVote(LoginRequiredMixin, CreateView):
                 'slug': beer_slug})
 
     def render_to_response(self, context, **response_kwargs):
-        print(context)
+        print('Context for vote is ', context)
         beer_id = context['object'].id
         beer_detail_url = reverse(
             'beer:BeerDetail',
@@ -117,6 +124,7 @@ class UpdateVote(LoginRequiredMixin, UpdateView):
             kwargs={'slug': beer_slug})
 
     def render_to_response(self, context, **response_kwargs):
+        print('Context for vote is ', context)
         beer_id = context['object'].id
         beer_detail_url = reverse(
             'beer:BeerDetail',
@@ -139,3 +147,33 @@ class BeerUpdate(LoginRequiredMixin, UpdateView):
     form_class = BeerCreateForm
     template_name = 'beers/update_view.html'
     print(object)
+
+
+class BeerCommentCreate(LoginRequiredMixin, CreateView):
+    model = BeerComment
+    form_class = BeerCommentForm
+
+    def get_initial(self):
+        initial = super().get_initial()
+        print('start initial is ', initial)
+        print('KWARGS for comments are ', self.kwargs)
+        initial['author'] = self.request.user.id
+        initial['beer'] = self.kwargs['slug']
+        print('final initial is ', initial)
+        return initial
+
+    def get_success_url(self):
+        beer_slug = self.object.beer.slug
+        print(beer_slug)
+        return reverse(
+            'beer:BeerDetail',
+            kwargs={'slug': beer_slug})
+    
+    '''def render_to_response(self, context, **response_kwargs):
+        print('Context for vote is ', context)
+        beer_id = context['object'].id
+        beer_detail_url = reverse(
+            'beer:BeerDetail',
+            kwargs={'pk': beer_id})
+        return redirect(
+            to=beer_detail_url)'''

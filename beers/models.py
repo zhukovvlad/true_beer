@@ -150,11 +150,12 @@ class Vote(models.Model):
 
 class BeerComment(models.Model):
     beer = models.ForeignKey(Beer, on_delete=models.CASCADE, related_name='comments')
-    author = models,models.ForeignKey(User, on_delete=models.CASCADE)
+    author = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     title = models.CharField(max_length=80)
     body = models.TextField()
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
+    active = models.BooleanField(default=True)
 
     class Meta:
         ordering = ('created',)
