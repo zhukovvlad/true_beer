@@ -1,5 +1,14 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    Home
+    {% if top_beer %}
+        Our most rated beer{% if top_beer.count > 1 %}s{% endif %}:
+        <ul>
+        {% for beer in top_beer %}
+            <li>{{ beer|upper }} with rating {{ max_score }}.
+        {% endfor %}
+        </ul>
+    {% else %}
+        We have not any voted beer in system yet.
+    {% endif %}
 {% endblock %}

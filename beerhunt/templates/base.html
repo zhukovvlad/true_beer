@@ -41,16 +41,16 @@
             </ul>
             <ul class="navbar-nav ml-auto">
               {% if user.is_authenticated %}
-                <li class="nav-item"><a class="nav-link" href="{% url 'dashboard' %}">{{ user }}</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'user:dashboard' %}">{{ user }}</a></li>
                 <li class="nav-item"><a class="nav-link" href="{% url 'beer:Create' %}"><span class="oi oi-plus"></span></a></li>
                 <li class="nav-item"><a class="nav-link" href="javaScript: {document.getElementById('logout').submit()}">Logout</a></li>
-                <form id="logout" method="POST" action="{% url 'logout' %}">
+                <form id="logout" method="POST" action="{% url 'user:logout' %}">
                   {% csrf_token %}
                   <input type="hidden">
                 </form>
               {% else %}
-                <li class="nav-item"><a class="nav-link" href="{% url 'signup' %}">Sign Up</a></li>
-                <li class="nav-item"><a class="nav-link" href="{% url 'login' %}"><span class="oi oi-account-login"></span></a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'user:signup' %}">Sign Up</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'user:login' %}"><span class="oi oi-account-login"></span></a></li>
               {% endif %}
             </ul>
           </div>

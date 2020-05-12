@@ -1,18 +1,29 @@
 # from git
 
 from django.shortcuts import render, redirect
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.core.exceptions import PermissionDenied
-from django.views.generic import ListView, DetailView, View, CreateView, UpdateView
+from django.views.generic import ListView, DetailView, View, CreateView, UpdateView, DeleteView
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import Max
 
 from beers.models import Beer, Vote, BeerComment
 from .forms import BeerCreateForm, VoteForm, BeerCommentForm
 
 # Create your views here.
 def home(request):
-    return render(request, 'beers/home.html')
+    qs = Beer.objects.all_with_related_instances_and_score()
+    top_rating = qs.aggregate(Max('score'))
+    top_beer = qs.filter(score=top_rating['score__max'])
+
+    context = {
+        'home': 'HOME PAGE',
+        'max_score': top_rating['score__max'],
+        'top_beer': top_beer
+    }
+
+    return render(request, 'beers/home.html', context)
 
 class BeerList(ListView):
     paginate_by = 10
@@ -70,7 +81,6 @@ class BeerDetail(DetailView):
             ctx['vote_form'] = vote_form
             ctx['vote_form_url'] = vote_form_url
             ctx['beer_comment_form'] = beer_comment_form
-            ctx['request_object'] = self.object
         print('final context is ', ctx)
         return ctx
 
@@ -146,7 +156,27 @@ class BeerUpdate(LoginRequiredMixin, UpdateView):
     queryset = Beer.objects.all()
     form_class = BeerCreateForm
     template_name = 'beers/update_view.html'
-    print(object)
+
+    def get_object(self, queryset=None):
+        updated_beer = super().get_object(queryset)
+        user = self.request.user
+        if updated_beer.hunter != user:
+            raise PermissionDenied("You can not change another user's beer")
+        return updated_beer
+
+
+class BeerDelete(LoginRequiredMixin, DeleteView):
+    queryset = Beer.objects.all()
+    #form_class = BeerCreateForm
+    #template_name = 'beers/update_view.html'
+    success_url = reverse_lazy('user:dashboard')
+
+    def get_object(self, queryset=None):
+        deleted_beer = super().get_object(queryset)
+        user = self.request.user
+        if deleted_beer.hunter != user:
+            raise PermissionDenied("You can not delete another user's beer")
+        return deleted_beer
 
 
 class BeerCommentCreate(LoginRequiredMixin, CreateView):

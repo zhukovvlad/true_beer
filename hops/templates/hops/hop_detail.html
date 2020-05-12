@@ -41,7 +41,7 @@
 	<h3>
     Brewered beers:
 	</h3>
-  <ul class="list-group list-group-horizontal">
+  <ul class="list-group">
   	{% for beer in object.used_hops.all %}
     	<li class="list-group-item">
         <a href="{{ beer.get_absolute_url }}">{{ beer.title_for_render }}</a>

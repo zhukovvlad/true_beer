@@ -1,4 +1,8 @@
 from django.db import models
+
+from imagekit.models import ImageSpecField
+from imagekit.processors import ResizeToFill
+
 from django.shortcuts import reverse
 from django.core.exceptions import ValidationError
 import django.contrib.auth
@@ -55,7 +59,13 @@ class Beer(models.Model):
     ibu = models.FloatField(null=True, blank=True)
 
     image = models.ImageField(upload_to='images/', default='images/default/default_beer.png', null=True, blank=True)
-    icon = models.ImageField(upload_to='images/', default='images/default/default_beer.png', null=True)
+    # icon = models.ImageField(upload_to='images/', default='images/default/default_beer.png', null=True)
+    icon = ImageSpecField(
+        source='image',
+        processors=[ResizeToFill(100, 100)],
+        format='PNG',
+        options={'quality': 60}
+    )
 
     votes_total = models.IntegerField(default=1)
 
