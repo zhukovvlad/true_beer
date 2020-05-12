@@ -6,21 +6,33 @@ from django.core.exceptions import PermissionDenied
 from django.views.generic import ListView, DetailView, View, CreateView, UpdateView, DeleteView
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.db.models import Max
+from django.db.models import Max, Count
 
 from beers.models import Beer, Vote, BeerComment
+from hops.models import Hop
 from .forms import BeerCreateForm, VoteForm, BeerCommentForm
 
 # Create your views here.
 def home(request):
     qs = Beer.objects.all_with_related_instances_and_score()
+
     top_rating = qs.aggregate(Max('score'))
     top_beer = qs.filter(score=top_rating['score__max'])
+
+    top_ibu = qs.aggregate(Max('ibu'))
+    top_ibu_beer = qs.filter(ibu=top_ibu['ibu__max'])
+
+    qs_hop = Hop.objects.all_with_prefetch_beers().annotate(count_breweries=Count('used_hops'))
+    qs_hop_max = qs_hop.aggregate(Max('count_breweries'))
+
 
     context = {
         'home': 'HOME PAGE',
         'max_score': top_rating['score__max'],
-        'top_beer': top_beer
+        'top_beer': top_beer,
+        'top_ibu': top_ibu['ibu__max'],
+        'top_ibu_beer': top_ibu_beer,
+        'qs_hop': qs_hop_max
     }
 
     return render(request, 'beers/home.html', context)

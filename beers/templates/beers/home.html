@@ -2,13 +2,22 @@
 
 {% block content %}
     {% if top_beer %}
-        Our most rated beer{% if top_beer.count > 1 %}s{% endif %}:
+        <h2>Our most rated beer{% if top_beer.count > 1 %}s{% endif %}:</h2>
         <ul>
         {% for beer in top_beer %}
-            <li>{{ beer|upper }} with rating {{ max_score }}.
+            <li><a href="{{ beer.get_absolute_url }}">{{ beer|upper }}</a> with rating {{ max_score }}.</li>
         {% endfor %}
         </ul>
     {% else %}
         We have not any voted beer in system yet.
     {% endif %}
+    {% if top_ibu_beer %}
+        <h2>Our bitterest beer{% if top__ibu_beer.count > 1 %}s{% endif %}:</h2>
+        <ul>
+        {% for beer in top_ibu_beer %}
+            <li><a href="{{ beer.get_absolute_url }}">{{ beer|upper }}</a> with IBU {{ top_ibu }}.</li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+    {{ qs_hop }}
 {% endblock %}
