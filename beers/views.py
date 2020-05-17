@@ -22,8 +22,9 @@ def home(request):
     top_ibu = qs.aggregate(Max('ibu'))
     top_ibu_beer = qs.filter(ibu=top_ibu['ibu__max'])
 
-    qs_hop = Hop.objects.all_with_prefetch_beers().annotate(count_breweries=Count('used_hops'))
-    qs_hop_max = qs_hop.aggregate(Max('count_breweries'))
+    qs_hop = Hop.objects.all_with_prefetch_beers().annotate(count_beers=Count('used_hops'))
+    qs_hop_max = qs_hop.aggregate(Max('count_beers'))
+    top_hop = qs_hop.filter(count_beers=qs_hop_max['count_beers__max'])
 
 
     context = {
@@ -32,7 +33,8 @@ def home(request):
         'top_beer': top_beer,
         'top_ibu': top_ibu['ibu__max'],
         'top_ibu_beer': top_ibu_beer,
-        'qs_hop': qs_hop_max
+        'qs_hop_max': qs_hop_max['count_beers__max'],
+        'top_hop': top_hop
     }
 
     return render(request, 'beers/home.html', context)

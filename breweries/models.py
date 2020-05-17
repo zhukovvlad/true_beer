@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils.text import slugify
+from django.db.models.aggregates import Sum
 
 from addresses.models import Country
 
@@ -14,6 +15,11 @@ class BreweryManager(models.Manager):
     def all_with_prefetch_beers(self):
         qs = self.get_queryset()
         return qs.prefetch_related('brewered')
+    
+    def all_with_prefetch_beers_and_score(self):
+        qs = self.all_with_prefetch_beers()
+        qs = qs.annotate(total_rating=Sum('vote__value'))
+        return qs
 
 class Brewery(models.Model):
     name = models.CharField(max_length=140, verbose_name='Brewery\'s name')

@@ -12,12 +12,19 @@
         We have not any voted beer in system yet.
     {% endif %}
     {% if top_ibu_beer %}
-        <h2>Our bitterest beer{% if top__ibu_beer.count > 1 %}s{% endif %}:</h2>
+        <h2>Our bitterest beer{% if top_ibu_beer.count > 1 %}s{% endif %}:</h2>
         <ul>
         {% for beer in top_ibu_beer %}
             <li><a href="{{ beer.get_absolute_url }}">{{ beer|upper }}</a> with IBU {{ top_ibu }}.</li>
         {% endfor %}
         </ul>
     {% endif %}
-    {{ qs_hop }}
+    {% if top_hop %}
+        <h2>Our most popular hop{% if top_hop.count > 1 %}s{% endif %}:</h2>
+        <ul>
+        {% for hop in top_hop %}
+            <li><a href="{% url 'hop:HopDetail' pk=hop.id %}">{{ hop|upper }}</a>. {{ qs_hop_max }} beers are brewed with this hop.</li>
+        {% endfor %}
+        </ul>
+    {% endif %}
 {% endblock %}

@@ -6,15 +6,15 @@
 
 {% block content %}
 	<h1>
-  	    {{ object }}
+  	    {{ object }} - Total Rate {{ rating }}
 	</h1>
 	<ul class="list-group list-group-horizontal">
-  	{% for beer in object.brewered.all %}
+  	{% for beer in connected_beers %}
     	<li class="list-group-item">
 		{% if beer.version %}
-        <a href="{{ beer.get_absolute_url }}">{{ beer.title_for_render }} {{ beer.version }}</a>
+        <a href="{{ beer.get_absolute_url }}">{{ beer.title_for_render }} {{ beer.version }}</a> - {{ beer.score }}
 		{% else %}
-		<a href="{{ beer.get_absolute_url }}">{{ beer.title_for_render }}</a>
+		<a href="{{ beer.get_absolute_url }}">{{ beer.title_for_render }}</a> - {{ beer.score }}
 		{% endif %}
     	</li>
     {% empty %}
