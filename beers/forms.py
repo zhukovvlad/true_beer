@@ -13,12 +13,13 @@ class BeerCreateForm(forms.ModelForm):
 
     class Meta:
         model = Beer
-        fields = ['title', 'version', 'description', 'og', 'abv', 'ibu', 'hops', 'brewery', 'style', 'hunter']
+        fields = ['title', 'version', 'description', 'image', 'og', 'abv', 'ibu', 'hops', 'brewery', 'style', 'hunter']
 
         widgets = {
             'title': forms.TextInput(attrs={'class': 'form-control'}),
             'version': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Sometimes some beer has different versions. Here you can enter this version.'}),
             'description': forms.Textarea(attrs={'class': 'form-control'}),
+            #'image': forms.ImageField(attrs={'class': 'form-control'}),
             'og': forms.NumberInput(attrs={'class': 'form-control'}),
             'abv': forms.NumberInput(attrs={'class': 'form-control'}),
             'ibu': forms.NumberInput(attrs={'class': 'form-control'}),

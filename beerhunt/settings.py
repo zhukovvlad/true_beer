@@ -31,11 +31,6 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'beers',
-    'accounts',
-    'breweries',
-    'hops',
-    'addresses',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -43,7 +38,12 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'crispy_forms',
-    'imagekit'
+    'imagekit',
+    'beers',
+    'accounts',
+    'breweries',
+    'hops',
+    'addresses'
 ]
 
 MIDDLEWARE = [
@@ -141,3 +141,5 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+#   AUTH_USER_MODEL = 'accounts.AdvUser'

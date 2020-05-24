@@ -1,8 +1,22 @@
+import os
+from uuid import uuid4
 from django.db import models
 from django.utils.text import slugify
 from django.db.models.aggregates import Sum
+from django.utils.timezone import now as timezone_now
+from django.shortcuts import reverse
+
+from imagekit.models import ImageSpecField
+from imagekit.processors import ResizeToFill
 
 from addresses.models import Country
+
+def brewery_directory_path_with_uuid(instance, filename):
+    now = timezone_now()
+    base, extension = os.path.splitext(filename)
+    extension = extension.lower()
+    uuid_for_url = uuid4()
+    return f"{now:%Y/%m}/breweries/{uuid_for_url}{instance.pk}{extension}"
 
 def gen_slug(s):
     new_slug = slugify(s, allow_unicode=True)
@@ -27,7 +41,22 @@ class Brewery(models.Model):
 
     country = models.ForeignKey(Country, null=True, on_delete=models.CASCADE)
 
+    description = models.TextField(null=True, blank=True)
+
+    image = models.ImageField(upload_to=brewery_directory_path_with_uuid, default='images/default/fermentation.png', null=True, blank=True)
+    icon = ImageSpecField(
+        source='image',
+        processors=[ResizeToFill(100, 100)],
+        format='PNG',
+        options={'quality': 60}
+    )
+
+    is_verified = models.BooleanField(default=False)
+
     objects = BreweryManager()
+
+    def get_absolute_url(self):
+        return reverse("brewery:BreweryDetail", kwargs={"slug": self.slug})
 
     class Meta:
         ordering = ('name', )

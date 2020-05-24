@@ -1,7 +1,9 @@
 from django.shortcuts import render
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, DetailView, CreateView
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .models import Brewery
+from .forms import BreweryCreateForm
 from beers.models import Beer
 
 # Create your views here.
@@ -27,9 +29,13 @@ class BreweryDetail(DetailView):
             if not item.score:
                 item.score = 0
             brewery_rating += item.score
-        brewery_rating = brewery_rating / len(brewery_beers)
+        # brewery_rating = brewery_rating / len(brewery_beers)
 
         ctx['connected_beers'] = brewery_beers
         ctx['rating'] = brewery_rating
         print('Final Brewery ctx is, ', ctx)
         return ctx
+
+class BreweryCreate(LoginRequiredMixin, CreateView):
+    form_class = BreweryCreateForm
+    template_name = 'breweries/create.html'
