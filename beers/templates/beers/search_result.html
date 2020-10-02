@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Search results
+{% endblock title %}
+
+{% block content %}
+    <h1>
+        Search Results
+    </h1>
+    {% if entries %}
+        <ul>
+            {% for entry in entries %}
+            <li><a href='{{entry.get_absolute_url}}'>{{ entry.title_for_render }}</a></li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        No results
+    {% endif %}
+{% endblock content %}
+
