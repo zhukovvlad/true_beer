@@ -7,13 +7,28 @@
 {% block content %}
 	<div class="container mt-1">
 
-		<ul class="list-group">
+		<ul class="list-group col">
 			{% for brewery in brewery_list %}
-    		<li class="list-group-item d-flex justify-content-between align-items-center mb-1">
-                <a href="{% url 'brewery:BreweryDetail' slug=brewery.slug %}">
-                    {{ brewery }}
-                </a>
-				Total beers - {{ brewery.brewered.count }}
+    		<!--<li class="list-group-item d-flex justify-content-between align-items-center mb-1">-->
+				<li class="border custom-brewery-list-bg rounded-lg row mt-4 pt-2 pb-2">
+					<div class="col-5" style="max-width: 100px">
+						<img src="{{ brewery.icon.url }}" class="img-fluid" alt="{{ brewery }}">
+					</div>
+					<div class="col-5">
+						<a href="{{ brewery.get_absolute_url }}">
+							<h4 class="mb-1">
+                	    		{{ brewery|upper }}
+							</h4>
+                		</a>
+						<div class="mt-1">Origin: <span class="font-weight-bold">{{ brewery.country }}</span></div>
+					</div>
+					<div class="col-2">
+						Total Rating - {{ brewery.rating }}
+					</div>
+					<div class="col-2">
+						Total beers - {{ brewery.brewered.count }}
+						Most popular - {{ brewery.brewered.title }}
+					</div>
     		</li>
     	{% endfor %}
 		</ul>

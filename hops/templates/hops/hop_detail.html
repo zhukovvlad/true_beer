@@ -44,7 +44,7 @@
   <ul class="list-group">
   	{% for beer in object.used_hops.all %}
     	<li class="list-group-item">
-        <a href="{{ beer.get_absolute_url }}">{{ beer.title_for_render }}</a>
+        <a href="{{ beer.get_absolute_url }}">{{ beer.title_for_render }}</a>. Brewered by {{ beer.brewery }}
     	</li>
     {% empty %}
     	<li class="list-group-item">Beers are unknown.</li>

@@ -10,6 +10,7 @@ from imagekit.models import ImageSpecField
 from imagekit.processors import ResizeToFill
 
 from addresses.models import Country
+#   from beers.models import Beer
 
 def brewery_directory_path_with_uuid(instance, filename):
     now = timezone_now()
@@ -28,10 +29,11 @@ def gen_slug(s):
 class BreweryManager(models.Manager):
     def all_with_prefetch_beers(self):
         qs = self.get_queryset()
-        return qs.prefetch_related('brewered')
+        return qs.select_related('country')
     
     def all_with_prefetch_beers_and_score(self):
         qs = self.all_with_prefetch_beers()
+        print(f'QS for breweries is {qs}')
         qs = qs.annotate(total_rating=Sum('vote__value'))
         return qs
 
@@ -53,7 +55,15 @@ class Brewery(models.Model):
 
     is_verified = models.BooleanField(default=False)
 
-    objects = BreweryManager()
+    #   objects = BreweryManager()
+
+    #def total_rating(self):
+    #    qs = self.brewered.all()
+    #    qs = qs.all_with_related_instances_and_score()
+    #    score = 0
+    #    for item in qs:
+    #        score += item.score
+    #    return score
 
     def get_absolute_url(self):
         return reverse("brewery:BreweryDetail", kwargs={"slug": self.slug})

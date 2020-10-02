@@ -22,7 +22,7 @@
 
   </head>
 
-  <body>
+  <body class="brewery-custom-container">
 
     <header>
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -40,6 +40,11 @@
                 <li class="nav-item"><a class="nav-link" href="{% url 'hop:HopList' %}">Hops</a></li>
             </ul>
             <ul class="navbar-nav ml-auto">
+              <form class="form-inline" action="{% url 'beer:Search' %}" method="post">
+                {% csrf_token %}
+                <input class="form-control mr-sm-2" type="search" name="q" placeholder="Search beer, brewery or hop" aria-label="Search">
+                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+              </form>
               {% if user.is_authenticated %}
                 <li class="nav-item"><a class="nav-link" href="{% url 'user:dashboard' %}">{{ user }}</a></li>
                 <li class="nav-item"><a class="nav-link" href="{% url 'beer:Create' %}"><span class="oi oi-plus"></span></a></li>

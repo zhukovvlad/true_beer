@@ -2,7 +2,7 @@
 
 from django.shortcuts import render, redirect
 from django.urls import reverse, reverse_lazy
-from django.core.exceptions import PermissionDenied
+from django.core.exceptions import PermissionDenied, ValidationError
 from django.views.generic import ListView, DetailView, View, CreateView, UpdateView, DeleteView
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -10,7 +10,7 @@ from django.db.models import Max, Count
 
 from beers.models import Beer, Vote, BeerComment
 from hops.models import Hop
-from .forms import BeerCreateForm, VoteForm, BeerCommentForm
+from .forms import BeerCreateForm, BeerUpdateForm, VoteForm, BeerCommentForm
 
 # Create your views here.
 def home(request):
@@ -57,11 +57,7 @@ class BeerDetail(DetailView):
     queryset = Beer.objects.all_with_related_instances_and_score()
     
     def get_context_data(self, **kwargs):
-        print('object is ', self.object)
-        print('request is ', self.request)
-        print('user is ', self.request.user)
         ctx = super().get_context_data(**kwargs)
-        print('initial ctx ', ctx)
         if self.request.user.is_authenticated:
             beer_comment = BeerComment(
                 beer=self.object,
@@ -95,7 +91,6 @@ class BeerDetail(DetailView):
             ctx['vote_form'] = vote_form
             ctx['vote_form_url'] = vote_form_url
             ctx['beer_comment_form'] = beer_comment_form
-        print('final context is ', ctx)
         return ctx
 
 
@@ -104,22 +99,22 @@ class CreateVote(LoginRequiredMixin, CreateView):
 
     def get_initial(self):
         initial = super().get_initial()
-        print('start initial is ', initial)
-        print('KWARGS are ', self.kwargs)
         initial['user'] = self.request.user.id
         initial['beer'] = self.kwargs['beer_id']
-        print('final initial is ', initial)
         return initial
     
     def get_success_url(self):
         beer_slug = self.object.beer.slug
-        return reverse(
-            'beer:BeerDetail',
-            kwargs={
-                'slug': beer_slug})
+        try:
+            return reverse(
+                'beer:BeerDetail',
+                kwargs={
+                    'slug': beer_slug})
+        except:
+            raise ValidationError("Oooops")
+
 
     def render_to_response(self, context, **response_kwargs):
-        print('Context for vote is ', context)
         beer_id = context['object'].id
         beer_detail_url = reverse(
             'beer:BeerDetail',
@@ -148,7 +143,6 @@ class UpdateVote(LoginRequiredMixin, UpdateView):
             kwargs={'slug': beer_slug})
 
     def render_to_response(self, context, **response_kwargs):
-        print('Context for vote is ', context)
         beer_id = context['object'].id
         beer_detail_url = reverse(
             'beer:BeerDetail',
@@ -168,11 +162,12 @@ class BeerCreate(LoginRequiredMixin, CreateView):
 
 class BeerUpdate(LoginRequiredMixin, UpdateView):
     queryset = Beer.objects.all()
-    form_class = BeerCreateForm
+    form_class = BeerUpdateForm
     template_name = 'beers/update_view.html'
 
     def get_object(self, queryset=None):
         updated_beer = super().get_object(queryset)
+        print(f"We update {updated_beer}")
         user = self.request.user
         if updated_beer.hunter != user:
             raise PermissionDenied("You can not change another user's beer")
@@ -199,16 +194,12 @@ class BeerCommentCreate(LoginRequiredMixin, CreateView):
 
     def get_initial(self):
         initial = super().get_initial()
-        print('start initial is ', initial)
-        print('KWARGS for comments are ', self.kwargs)
         initial['author'] = self.request.user.id
         initial['beer'] = self.kwargs['slug']
-        print('final initial is ', initial)
         return initial
 
     def get_success_url(self):
         beer_slug = self.object.beer.slug
-        print(beer_slug)
         return reverse(
             'beer:BeerDetail',
             kwargs={'slug': beer_slug})
@@ -221,3 +212,24 @@ class BeerCommentCreate(LoginRequiredMixin, CreateView):
             kwargs={'pk': beer_id})
         return redirect(
             to=beer_detail_url)'''
+
+
+def q():
+    return 5
+
+
+def search(request):
+    if request.method == 'POST':
+        queryset = Beer.objects.all_with_related_instances_and_score()
+        for i in queryset:
+            print(i)
+        search_item = request.POST['q'].lower()
+        print(f'We are looking for {search_item}')
+        if not search_item:
+            return render(request, 'beers/search_result.html')
+        search_result = [item for item in queryset if search_item in item.title]
+        return render(request, 'beers/search_result.html', {
+            'entries': search_result
+        })
+    else:
+        return render(request, 'beers/search_result.html')

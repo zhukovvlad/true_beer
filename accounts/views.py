@@ -11,11 +11,9 @@ from beers.models import Beer
 # Create your views here.
 def signup(request):
     if request.method == 'POST':
-        print(request.POST['username'])
         if request.POST['password1'] == request.POST['password2']:
             try:
                 user = User.objects.get(username=request.POST['username'])
-                print(User.objects.all())
                 return render(request, 'accounts/signup.html', {'error': 'Username has already been taken'})
             except User.DoesNotExist:
                 user = User.objects.create_user(request.POST['username'], password=request.POST['password1'])
@@ -48,9 +46,11 @@ def dashboard(request):
     user_beers = user_beers.filter(hunter=request.user.id)
     user_beers = user_beers.order_by('-score')
     total_count = user_beers.count()
+    '''
     top_ten = user_beers.order_by('-score')
     top_ten = top_ten.exclude(score=None)
     top_ten = top_ten[:10]
+    '''
     total_score = 0
     for beer in user_beers:
         if beer.score:
@@ -59,6 +59,6 @@ def dashboard(request):
         'user_beers': user_beers,
         'total_score': total_score,
         'total_count': total_count,
-        'top_ten': top_ten
+        #   'top_ten': top_ten
     }
     return render(request, 'accounts/dashboard.html', context)

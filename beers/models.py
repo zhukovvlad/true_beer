@@ -80,7 +80,7 @@ class Beer(models.Model):
         options={'quality': 60}
     )
 
-    votes_total = models.IntegerField(default=1)
+    #   votes_total = models.IntegerField(default=1)
 
     hunter = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
 
